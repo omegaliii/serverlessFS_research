@@ -1,0 +1,10 @@
+INFO:root:Trying to OPEN file: log.txt
+ERROR:root:Can't open file log.txt : [Errno 2] No such file or directory: 'log.txt'
+INFO:root:Trying to OPEN file: myFile.txt
+INFO:root:Open file myFile.txt successfully.
+INFO:root:Trying to OPEN file: myFile.txt
+INFO:root:Open file myFile.txt successfully.
+INFO:root:Trying to OPEN file: myFile.txt
+INFO:root:Open file myFile.txt successfully.
+INFO:root:Tring to READ file: myFile.txt
+INFO:root:Read file myFile.txt successfully.
