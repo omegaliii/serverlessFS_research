@@ -1,6 +1,8 @@
 import logging
 import builtins
 
+logging.basicConfig(filename='os.log',level=logging.INFO)
+
 """
 Open the file by path and logging the operation
 Param:
@@ -13,7 +15,6 @@ Return:
 """
 def open(path, mode='r'):
     # Setting up the logger
-    logging.basicConfig(filename='os.log',level=logging.INFO)
     logging.info('Trying to OPEN file: ' + path)
 
     try:
@@ -27,8 +28,18 @@ def open(path, mode='r'):
         print(err)
 
 class LoggingosFile:
+    _f = None
+
     def __init__(self, fileObject):
         self._f = fileObject
+
+    def __enter__(self):
+        # support with statement
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # support with statement
+        self.close()
 
     """
     Close the file and logging the operation
@@ -37,7 +48,7 @@ class LoggingosFile:
     """
     def close(self):
         # Setting up the logger
-        logging.basicConfig(filename='os.log',level=logging.INFO)
+        # logging.basicConfig(filename='os.log',level=logging.INFO)
         logging.info('Trying to CLOSE file: ' + self._f.name)
 
         try:
@@ -56,7 +67,7 @@ class LoggingosFile:
     """
     def read(self):
         # Setting up the logger
-        logging.basicConfig(filename='os.log',level=logging.INFO)
+        # logging.basicConfig(filename='os.log',level=logging.INFO)
         logging.info('Tring to READ file: ' + self._f.name)
 
         try:
@@ -75,7 +86,7 @@ class LoggingosFile:
     """
     def write(self, content):
         # Setting up the logger
-        logging.basicConfig(filename='os.log',level=logging.INFO)
+        # logging.basicConfig(filename='os.log',level=logging.INFO)
         logging.info('Trying to WIRTE file:' + self._f.name)
 
         try:

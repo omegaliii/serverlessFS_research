@@ -1,15 +1,8 @@
-import builtins
-import builtins
+from loggingos import *
 
-def open(path):
-    f = builtins.open(path, 'r')
-    return UpperCaser(f)
+print('with read')
+print(open)
+with open('myFile.txt') as f:
+    print(f)
+    print(f.read())
 
-class UpperCaser:
-    '''Wrapper around a file that converts output to upper-case.'''
-
-    def __init__(self, f):
-        self._f = f
-
-    def read(self, count=-1):
-        return self._f.read(count).upper()
