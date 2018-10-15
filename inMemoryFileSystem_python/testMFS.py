@@ -1,4 +1,4 @@
-from FileSystem import *
+from memoryFS import *
 
 print("Making two directory under the root.")
 mkdir("/dir1")
@@ -11,6 +11,10 @@ print("Creating a test.txt file under dir1")
 create("/dir1/test.txt")
 print("list dir1:")
 ls("/dir1")
+print("======================================")
+
+print("Open the test.txt file")
+openFile("/dir1/test.txt",'rw')
 print("======================================")
 
 print("Read test.txt file")

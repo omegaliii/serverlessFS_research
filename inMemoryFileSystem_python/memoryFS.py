@@ -1,11 +1,17 @@
 class File:
-
     def __init__(self):
+        self.isOpen = False
         self.isFile = False
-        self.files = {}
+        self.isReadable = False
+        self.isWriteable = False
         self.content = ""
 
-root = File()
+class Directory():
+    def __init__(self):
+        self.files = {}
+
+root = Directory()
+
 def mkdir(path):
     t = root
     if (path[0] != "/"):
@@ -15,7 +21,7 @@ def mkdir(path):
     d = path.split("/")
     for i in range(1,len(d)):
         if (d[i] not in t.files):
-            t.files[d[i]] = File()
+            t.files[d[i]] = Directory()
         t = t.files[d[i]]
 
 def rmdir(path):
@@ -32,11 +38,11 @@ def rmdir(path):
                 return
             t = t.files.get(d[i])
         
-        if(t.files[d[-1]].isFile):
-            print("It is not a directory.")
-        else:
+        if(isinstance(t.files[d[-1]], Directory)):
             del t.files[d[-1]]
             return
+        else:
+            print("It is not a directory.")
 
     print("root can't be removed")
         
@@ -78,7 +84,53 @@ def create(path):
     
     t.files[d[-1]] = File()
     t = t.files[d[-1]]
-    t.isFile = True
+
+def openFile(path, flag):
+    if (path[0] != "/"):
+        print("path mush start with '/'")
+        return
+
+    t = root
+    d = path.split("/")
+    for i in range(1,len(d)):
+        if (d[i] not in t.files):
+            print("path incorrect: no", d[i])
+            return
+        t = t.files[d[i]]
+    
+    flagList = list(flag)
+    if(isinstance(t,File)):
+        if(('r' not in flagList) and ('w' not in flagList)):
+            print("flags error")
+            return
+        if('r' in flagList):
+            t.isOpen = True
+            t.isReadable = True
+        if('w' in flagList):
+            t.isOpen = True
+            t.isWriteable = True
+    else:
+        print("Not a file. Can't be opened")
+    
+    return t
+
+def close(path):
+    if (path[0] != "/"):
+        print("path mush start with '/'")
+        return
+
+    t = root
+    d = path.split("/")
+    for i in range(1,len(d)):
+        if (d[i] not in t.files):
+            print("path incorrect: no", d[i])
+            return
+        t = t.files[d[i]]
+    
+    if(isinstance(t,File)):
+        t.isOpen = False
+        t.isReadable = False
+        t.isWriteable = False
 
 def read(path):
     if (path[0] != "/"):
@@ -93,11 +145,17 @@ def read(path):
             return
         t = t.files[d[i]]
     
-    if(t.isFile):
-        if(not t.content):
-            return
+    if(isinstance(t,File)):
+        if(t.isOpen and t.isReadable):
+            if(not t.content):
+                return
+            else:
+                print(t.content)
         else:
-            print(t.content)
+            if(not t.isOpen):
+                print("File is not open")
+            else:
+                print("File is not readable")
     else:
         print("Not a file. Can't be read")
 
@@ -114,11 +172,17 @@ def readline(path):
             return
         t = t.files[d[i]]
     
-    if(t.isFile):
-        if(not t.content):
-            return
+    if(isinstance(t,File)):
+        if(t.isOpen and t.isReadable):
+            if(not t.content):
+                return
+            else:
+                print(t.content.split('\n')[0])
         else:
-            print(t.content.split('\n')[0])
+            if(not t.isOpen):
+                print("File is not open")
+            else:
+                print("File is not readable")
     else:
         print("Not a file. Can't be read")
 
@@ -135,8 +199,17 @@ def write(path, content):
             return
         t = t.files[d[i]]
     
-    if(t.isFile):
-        t.content = t.content + content
+    if(isinstance(t,File)):
+        if(t.isOpen and t.isWriteable):
+            t.content = t.content + content
+        else:
+            if(not t.isOpen):
+                print("File is not open")
+            else:
+                print("File is not writeable")
     else:
         print("Not a file. Can't be write")
+
+def getRoot():
+    return root
 
