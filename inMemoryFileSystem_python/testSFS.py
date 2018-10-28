@@ -62,8 +62,7 @@ with open("pandaDF.csv", "w") as pd_write_file:
     input_df.to_csv(pd_write_file)
 
 with open("pandaDF.csv", "r") as pd_load_file:
-    h = StringIO(pd_load_file.read())
-    outputdf = pd.read_csv(h, sep=',')
+    outputdf = pd.read_csv(pd_load_file, sep=',')
 
 print("Output DataFrame: ")
 print(outputdf)

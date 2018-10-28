@@ -32,7 +32,7 @@ def reset_builtin_open():
 class FileObjectWapper:
     def __init__(self, mfsFileObject):
         self._f = mfsFileObject
-        self.currentPos = 0
+        self._currentPos = 0
 
     def __enter__(self):
         # support with statement
@@ -45,8 +45,14 @@ class FileObjectWapper:
     def __iter__(self):
         pass
 
-    def read(self, size=-1):
+    def read(self, size=None):
         if(self._f.isReadable):
+            if(size != None):
+                endIndex = min(self._currentPos + size, len(self._f.content)) 
+                chunk = self._f.content[self._currentPos : endIndex]
+                self._currentPos = self._currentPos + size
+                return chunk
+
             return self._f.content
         else:
             raise Exception("The file is not readable")
@@ -70,16 +76,16 @@ class FileObjectWapper:
 
     def seek(self,pos,whence=0):
         if(whence==1):
-            self.currentPos += pos
+            self._currentPos += pos
         if(whence==0):
-            self.currentPos = pos
+            self._currentPos = pos
 
 class ByteFileObjectWapper:
     def __init__(self, mfsFileObject):
         self._f = mfsFileObject
         if(not isinstance(self._f.content,bytearray)):
             self._f.content = bytearray()
-        self.currentPos = 0
+        self._currentPos = 0
 
     def __enter__(self):
         # support with statement
@@ -95,9 +101,9 @@ class ByteFileObjectWapper:
     def read(self, size=None):
         if(self._f.isReadable):
             if(size != None):
-                endIndex = min(self.currentPos + size, len(self._f.content))                    
-                chunk = bytes(self._f.content)[self.currentPos : endIndex]
-                self.currentPos = self.currentPos + size
+                endIndex = min(self._currentPos + size, len(self._f.content))                    
+                chunk = bytes(self._f.content)[self._currentPos : endIndex]
+                self._currentPos = self._currentPos + size
                 return chunk
 
             return bytes(self._f.content)
@@ -119,8 +125,8 @@ class ByteFileObjectWapper:
 
     def seek(self,pos,whence=0):
         if(whence==1):
-            self.currentPos += pos
+            self._currentPos += pos
         if(whence==0):
-            self.currentPos = pos
+            self._currentPos = pos
 
 
